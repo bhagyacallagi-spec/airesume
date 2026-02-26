@@ -87,22 +87,35 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
               <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
                 Projects
               </h2>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {projects.map((proj) => (
                   <div key={proj.id} className="border-l-2 border-slate-200 pl-4 break-inside-avoid-page">
-                    <div className="flex items-baseline gap-2">
-                      <h3 className="font-semibold text-black">{proj.name}</h3>
-                      {proj.link && (
-                        <a href={`https://${proj.link}`} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
-                          ↗
-                        </a>
-                      )}
+                    <div className="flex items-baseline justify-between">
+                      <h3 className="font-semibold text-black">{proj.title}</h3>
+                      <div className="flex gap-2">
+                        {proj.liveUrl && (
+                          <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
+                            Live ↗
+                          </a>
+                        )}
+                        {proj.githubUrl && (
+                          <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
+                            GitHub ↗
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    {proj.technologies && (
-                      <div className="text-xs text-slate-500">{proj.technologies}</div>
+                    {proj.techStack.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {proj.techStack.map((tech) => (
+                          <span key={tech} className="text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     )}
                     {proj.description && (
-                      <p className="text-sm text-slate-700 mt-1 leading-relaxed">{proj.description}</p>
+                      <p className="text-sm text-slate-700 mt-2 leading-relaxed">{proj.description}</p>
                     )}
                   </div>
                 ))}
@@ -114,17 +127,48 @@ export default function ModernTemplate({ data }: ModernTemplateProps) {
         {/* Right Column */}
         <div className="w-1/3 space-y-5">
           {/* Skills */}
-          {skills.length > 0 && (
+          {(skills.technical.length > 0 || skills.soft.length > 0 || skills.tools.length > 0) && (
             <div>
               <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                 Skills
               </h2>
-              <div className="flex flex-wrap gap-1.5">
-                {skills.map((skill) => (
-                  <span key={skill} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
-                    {skill}
-                  </span>
-                ))}
+              <div className="space-y-2">
+                {skills.technical.length > 0 && (
+                  <div>
+                    <span className="text-xs text-slate-400 block mb-1">Technical</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {skills.technical.map((skill) => (
+                        <span key={skill} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {skills.soft.length > 0 && (
+                  <div>
+                    <span className="text-xs text-slate-400 block mb-1">Soft Skills</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {skills.soft.map((skill) => (
+                        <span key={skill} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {skills.tools.length > 0 && (
+                  <div>
+                    <span className="text-xs text-slate-400 block mb-1">Tools</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {skills.tools.map((skill) => (
+                        <span key={skill} className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

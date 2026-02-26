@@ -16,7 +16,9 @@ export default function ResumePreview() {
     education.length > 0 || 
     experience.length > 0 ||
     projects.length > 0 ||
-    skills.length > 0;
+    skills.technical.length > 0 ||
+    skills.soft.length > 0 ||
+    skills.tools.length > 0;
 
   if (!hasAnyContent) {
     return (

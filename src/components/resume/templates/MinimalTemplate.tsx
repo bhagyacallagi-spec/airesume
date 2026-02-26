@@ -93,22 +93,33 @@ export default function MinimalTemplate({ data }: MinimalTemplateProps) {
       {projects.length > 0 && (
         <div className="mb-6">
           <h2 className="text-xs text-slate-400 uppercase tracking-widest mb-3">Projects</h2>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {projects.map((proj) => (
               <div key={proj.id} className="break-inside-avoid-page">
-                <div className="flex items-baseline gap-2">
-                  <h3 className="font-medium text-black text-sm">{proj.name}</h3>
-                  {proj.link && (
-                    <a href={`https://${proj.link}`} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
-                      {proj.link}
-                    </a>
-                  )}
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-medium text-black text-sm">{proj.title}</h3>
+                  <div className="flex gap-2">
+                    {proj.liveUrl && (
+                      <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
+                        Live
+                      </a>
+                    )}
+                    {proj.githubUrl && (
+                      <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-black">
+                        GitHub
+                      </a>
+                    )}
+                  </div>
                 </div>
-                {proj.technologies && (
-                  <div className="text-xs text-slate-500">{proj.technologies}</div>
+                {proj.techStack.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {proj.techStack.map((tech) => (
+                      <span key={tech} className="text-xs text-slate-500">{tech}</span>
+                    ))}
+                  </div>
                 )}
                 {proj.description && (
-                  <p className="text-sm text-slate-600 mt-1 leading-relaxed">{proj.description}</p>
+                  <p className="text-sm text-slate-600 mt-2 leading-relaxed">{proj.description}</p>
                 )}
               </div>
             ))}
@@ -117,10 +128,29 @@ export default function MinimalTemplate({ data }: MinimalTemplateProps) {
       )}
 
       {/* Skills */}
-      {skills.length > 0 && (
+      {(skills.technical.length > 0 || skills.soft.length > 0 || skills.tools.length > 0) && (
         <div>
           <h2 className="text-xs text-slate-400 uppercase tracking-widest mb-2">Skills</h2>
-          <p className="text-sm text-slate-600">{skills.join(' • ')}</p>
+          <div className="space-y-1.5">
+            {skills.technical.length > 0 && (
+              <p className="text-sm text-slate-600">
+                <span className="text-slate-400">Technical: </span>
+                {skills.technical.join(' • ')}
+              </p>
+            )}
+            {skills.soft.length > 0 && (
+              <p className="text-sm text-slate-600">
+                <span className="text-slate-400">Soft: </span>
+                {skills.soft.join(' • ')}
+              </p>
+            )}
+            {skills.tools.length > 0 && (
+              <p className="text-sm text-slate-600">
+                <span className="text-slate-400">Tools: </span>
+                {skills.tools.join(' • ')}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

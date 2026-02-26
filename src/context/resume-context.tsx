@@ -35,10 +35,11 @@ export interface Experience {
 
 export interface Project {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  technologies: string;
-  link?: string;
+  techStack: string[];
+  liveUrl?: string;
+  githubUrl?: string;
 }
 
 export interface Links {
@@ -47,13 +48,19 @@ export interface Links {
   website: string;
 }
 
+export interface CategorizedSkills {
+  technical: string[];
+  soft: string[];
+  tools: string[];
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   summary: string;
   education: Education[];
   experience: Experience[];
   projects: Project[];
-  skills: string[];
+  skills: CategorizedSkills;
   links: Links;
 }
 
@@ -68,7 +75,11 @@ const defaultResumeData: ResumeData = {
   education: [],
   experience: [],
   projects: [],
-  skills: [],
+  skills: {
+    technical: [],
+    soft: [],
+    tools: [],
+  },
   links: {
     github: '',
     linkedin: '',
@@ -117,13 +128,17 @@ const sampleResumeData: ResumeData = {
   projects: [
     {
       id: '1',
-      name: 'Open Source CLI Tool',
+      title: 'Open Source CLI Tool',
       description: 'A command-line tool for automating developer workflows with 10K+ GitHub stars.',
-      technologies: 'TypeScript, Node.js',
-      link: 'github.com/alex/cli-tool',
+      techStack: ['TypeScript', 'Node.js'],
+      githubUrl: 'github.com/alex/cli-tool',
     },
   ],
-  skills: ['TypeScript', 'React', 'Node.js', 'Python', 'AWS', 'PostgreSQL', 'GraphQL', 'Docker'],
+  skills: {
+    technical: ['TypeScript', 'React', 'Node.js', 'Python', 'AWS'],
+    soft: ['Team Leadership', 'Problem Solving'],
+    tools: ['Git', 'Docker', 'PostgreSQL', 'GraphQL'],
+  },
   links: {
     github: 'github.com/alexjohnson',
     linkedin: 'linkedin.com/in/alexjohnson',
@@ -168,7 +183,9 @@ interface ResumeContextType {
   addProject: (project: Omit<Project, 'id'>) => void;
   updateProject: (id: string, project: Partial<Project>) => void;
   removeProject: (id: string) => void;
-  updateSkills: (skills: string[]) => void;
+  updateSkills: (category: keyof CategorizedSkills, skills: string[]) => void;
+  addSkill: (category: keyof CategorizedSkills, skill: string) => void;
+  removeSkill: (category: keyof CategorizedSkills, skill: string) => void;
   updateLinks: (links: Partial<Links>) => void;
   loadSampleData: () => void;
   clearData: () => void;
@@ -204,8 +221,9 @@ function calculateATSScore(data: ResumeData): ATSScore {
     breakdown.experience = 10;
   }
 
-  // +10 if skills list has >= 8 items
-  if (data.skills.length >= 8) {
+  // +10 if total skills across all categories >= 8 items
+  const totalSkills = data.skills.technical.length + data.skills.soft.length + data.skills.tools.length;
+  if (totalSkills >= 8) {
     breakdown.skills = 10;
   }
 
@@ -425,8 +443,31 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     }));
   };
 
-  const updateSkills = (skills: string[]) => {
-    setResumeData((prev) => ({ ...prev, skills }));
+  const updateSkills = (category: keyof CategorizedSkills, skills: string[]) => {
+    setResumeData((prev) => ({
+      ...prev,
+      skills: { ...prev.skills, [category]: skills },
+    }));
+  };
+
+  const addSkill = (category: keyof CategorizedSkills, skill: string) => {
+    setResumeData((prev) => ({
+      ...prev,
+      skills: {
+        ...prev.skills,
+        [category]: [...prev.skills[category], skill],
+      },
+    }));
+  };
+
+  const removeSkill = (category: keyof CategorizedSkills, skill: string) => {
+    setResumeData((prev) => ({
+      ...prev,
+      skills: {
+        ...prev.skills,
+        [category]: prev.skills[category].filter((s) => s !== skill),
+      },
+    }));
   };
 
   const updateLinks = (links: Partial<Links>) => {
@@ -464,6 +505,8 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
         updateProject,
         removeProject,
         updateSkills,
+        addSkill,
+        removeSkill,
         updateLinks,
         loadSampleData,
         clearData,

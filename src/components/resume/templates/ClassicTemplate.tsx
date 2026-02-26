@@ -109,22 +109,35 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
           <h2 className="text-sm font-bold text-black uppercase tracking-wider border-b border-slate-300 pb-1 mb-2">
             Projects
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {projects.map((proj) => (
               <div key={proj.id} className="break-inside-avoid-page">
                 <div className="flex justify-between items-baseline">
-                  <h3 className="font-semibold text-black">{proj.name}</h3>
-                  {proj.link && (
-                    <a href={`https://${proj.link}`} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-black">
-                      {proj.link}
-                    </a>
-                  )}
+                  <h3 className="font-semibold text-black">{proj.title}</h3>
+                  <div className="flex gap-2">
+                    {proj.liveUrl && (
+                      <a href={proj.liveUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-black">
+                        Live
+                      </a>
+                    )}
+                    {proj.githubUrl && (
+                      <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-600 hover:text-black">
+                        GitHub
+                      </a>
+                    )}
+                  </div>
                 </div>
-                {proj.technologies && (
-                  <div className="text-sm text-slate-600 italic">{proj.technologies}</div>
+                {proj.techStack.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {proj.techStack.map((tech) => (
+                      <span key={tech} className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 )}
                 {proj.description && (
-                  <p className="text-sm text-slate-800 mt-1 leading-relaxed">{proj.description}</p>
+                  <p className="text-sm text-slate-800 mt-2 leading-relaxed">{proj.description}</p>
                 )}
               </div>
             ))}
@@ -133,12 +146,31 @@ export default function ClassicTemplate({ data }: ClassicTemplateProps) {
       )}
 
       {/* Skills */}
-      {skills.length > 0 && (
+      {(skills.technical.length > 0 || skills.soft.length > 0 || skills.tools.length > 0) && (
         <div>
           <h2 className="text-sm font-bold text-black uppercase tracking-wider border-b border-slate-300 pb-1 mb-2">
             Skills
           </h2>
-          <p className="text-sm text-slate-800">{skills.join(', ')}</p>
+          <div className="space-y-2">
+            {skills.technical.length > 0 && (
+              <div>
+                <span className="text-xs text-slate-500 uppercase">Technical: </span>
+                <span className="text-sm text-slate-800">{skills.technical.join(', ')}</span>
+              </div>
+            )}
+            {skills.soft.length > 0 && (
+              <div>
+                <span className="text-xs text-slate-500 uppercase">Soft Skills: </span>
+                <span className="text-sm text-slate-800">{skills.soft.join(', ')}</span>
+              </div>
+            )}
+            {skills.tools.length > 0 && (
+              <div>
+                <span className="text-xs text-slate-500 uppercase">Tools: </span>
+                <span className="text-sm text-slate-800">{skills.tools.join(', ')}</span>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -39,7 +39,8 @@ export default function ImprovementPanel() {
   }
 
   // Check skills count
-  if (skills.length < 8) {
+  const totalSkills = skills.technical.length + skills.soft.length + skills.tools.length;
+  if (totalSkills < 8) {
     improvements.push({
       message: 'Add more skills (target 8+) to improve ATS matching.',
       priority: 4,
